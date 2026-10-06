@@ -1,0 +1,4 @@
+{
+  "siteUrl": "",
+  "_note": "Set siteUrl to the final live address (e.g. https://www.example.com) and run: node scripts/set-site-url.js && node scripts/generate-qr.js"
+}
