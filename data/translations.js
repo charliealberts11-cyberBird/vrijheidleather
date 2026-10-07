@@ -51,7 +51,7 @@ window.VRIJHEID_I18N = {
     'contact.phoneLabel': 'Telephone',
     'contact.emailLabel': 'Email',
     'contact.locationLabel': 'Location',
-    'contact.location': 'Windhoek CBD, Namibia',
+    'contact.location': 'Old heritage monument, Blohm street, CBD, Windhoek',
 
     'footer.about': 'Handcrafted leather goods from Windhoek, Namibia. 100% Namibian owned, established in 2019.',
     'footer.explore': 'Explore',
@@ -362,7 +362,7 @@ window.VRIJHEID_I18N = {
     'contact.phoneLabel': 'Telefoon',
     'contact.emailLabel': 'E-pos',
     'contact.locationLabel': 'Ligging',
-    'contact.location': 'Windhoek-middestad, Namibië',
+    'contact.location': 'Ou erfdeel monument, Blohm Str, SBD, Windhoek',
 
     'footer.about': 'Handgemaakte leergoedere uit Windhoek, Namibië. 100% Namibies besit, gestig in 2019.',
     'footer.explore': 'Verken',
