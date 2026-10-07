@@ -59,6 +59,7 @@ window.VRIJHEID_I18N = {
     'footer.follow': 'Follow',
     'footer.language': 'Language',
     'footer.rights': 'All rights reserved.',
+    'footer.credit': 'Website designed and built by',
     'footer.analytics': 'This website uses Google Analytics to understand how visitors use the site. No personal details are sold or shared for advertising by Vrijheid.',
     'footer.top': 'Back to top',
 
@@ -370,6 +371,7 @@ window.VRIJHEID_I18N = {
     'footer.follow': 'Volg',
     'footer.language': 'Taal',
     'footer.rights': 'Alle regte voorbehou.',
+    'footer.credit': 'Webwerf ontwerp en gebou deur',
     'footer.analytics': 'Hierdie webwerf gebruik Google Analytics om te verstaan hoe besoekers die webwerf gebruik. Vrijheid verkoop of deel geen persoonlike besonderhede vir advertensies nie.',
     'footer.top': 'Terug na bo',
 
