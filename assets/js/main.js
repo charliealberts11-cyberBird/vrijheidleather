@@ -35,6 +35,15 @@
   function storageGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
   function storageSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
 
+
+  /* ------------------------------------------------------------------
+   * Google Analytics 4 events (Measurement ID set in each page <head>)
+   * Product names are always sent in English so reports stay consistent.
+   * ------------------------------------------------------------------ */
+  function track(name, params) {
+    try { if (typeof window.gtag === 'function') window.gtag('event', name, params || {}); } catch (e) { /* never break the site */ }
+  }
+  function productNameEn(p) { return (p && p.name && p.name.en) || ''; }
   /* ------------------------------------------------------------------
    * Language
    * ------------------------------------------------------------------ */
@@ -82,6 +91,7 @@
     if (LANGS.indexOf(next) === -1 || next === lang) return;
     lang = next;
     storageSet(LANG_KEY, lang);
+    track('language_switch', { language: lang });
     applyLanguage();
   }
 
@@ -313,7 +323,7 @@
           '<div class="card__foot">' +
             '<div class="card__price">' + priceHtml(p) + '</div>' +
             '<div class="card__actions">' + details +
-              '<a class="btn btn--primary btn--small" href="' + mailtoFor(p) + '" aria-label="' + esc(t('cta.orderAria', { product: name })) + '">' + esc(t('cta.order')) + '</a>' +
+              '<a class="btn btn--primary btn--small" data-track-order="' + esc(productNameEn(p)) + '" data-track-location="card" href="' + mailtoFor(p) + '" aria-label="' + esc(t('cta.orderAria', { product: name })) + '">' + esc(t('cta.order')) + '</a>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -369,6 +379,7 @@
       var b = e.target.closest('[data-filter]');
       if (!b) return;
       active = b.getAttribute('data-filter');
+      track('filter_products', { category: active });
       applyFilter(true);
     });
 
@@ -407,6 +418,8 @@
       $('[data-modal-custom]', dlg).textContent = pick(p.customisation);
       var order = $('[data-modal-order]', dlg);
       order.href = mailtoFor(p);
+      order.setAttribute('data-track-order', productNameEn(p));
+      order.setAttribute('data-track-location', 'product_details');
       order.setAttribute('aria-label', t('cta.orderAria', { product: name }));
     }
 
@@ -415,6 +428,7 @@
       current = p; photo = 0;
       lastFocus = document.activeElement;
       render();
+      track('view_product', { product_name: productNameEn(p), product_id: p.id });
       if (canDialog) { if (!dlg.open) dlg.showModal(); } else { dlg.setAttribute('open', ''); }
       // always start at the top of the information (desktop panel) / whole sheet (mobile)
       var info = $('.pmodal__info', dlg); if (info) info.scrollTop = 0;
@@ -605,6 +619,7 @@
           : (subjectField && subjectField.value.trim() ? subjectField.value.trim() : t('email.generalSubject'));
 
         if (!connected) {
+          track('form_submit', { form_name: kind, method: 'email_app' });
           window.location.href = mailto(subject, buildEmailBody());
           showStatus('success', t('form.fallbackDone'));
           return;
@@ -636,6 +651,7 @@
           .then(function (res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
             form.reset(); files = []; renderFiles();
+            track('form_submit', { form_name: kind, method: 'form_service' });
             showStatus('success', t('form.success'));
           })
           .catch(function () { showStatus('error', t('form.error')); })
@@ -662,6 +678,28 @@
   /* ------------------------------------------------------------------
    * Boot
    * ------------------------------------------------------------------ */
+
+  /* Click tracking: enquiries, phone, email, social */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var page = document.body.getAttribute('data-page') || '';
+    if (a.hasAttribute('data-track-order')) {
+      track('order_enquiry', { product_name: a.getAttribute('data-track-order'), location: a.getAttribute('data-track-location') || '', page: page });
+    } else if (a.hasAttribute('data-mailto')) {
+      track('email_enquiry', { enquiry_type: a.getAttribute('data-mailto'), page: page });
+    } else if (href.indexOf('tel:') === 0) {
+      track('phone_click', { page: page });
+    } else if (href.indexOf('mailto:') === 0) {
+      track('email_click', { page: page });
+    } else if (/facebook\.com/.test(href)) {
+      track('social_click', { platform: 'facebook', page: page });
+    } else if (/instagram\.com/.test(href)) {
+      track('social_click', { platform: 'instagram', page: page });
+    }
+  });
+
   function boot() {
     $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
     initHeader();

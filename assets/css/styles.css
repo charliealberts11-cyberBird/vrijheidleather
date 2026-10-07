@@ -705,3 +705,6 @@ a.value:hover { text-decoration: underline; text-decoration-color: var(--orange)
 
 /* close button sits above the scrolling text — give it a solid backing */
 .pmodal__close { background: rgba(17, 16, 14, .92); }
+
+/* analytics notice in footer */
+.footer-privacy { flex-basis: 100%; order: 3; margin: 6px 0 0; font-size: .78rem; color: var(--text-muted); max-width: 70ch; }
